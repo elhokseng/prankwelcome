@@ -3,12 +3,21 @@
 <head>
   <title>System Breach Detected</title>
   <style>
-    /* Full-screen bait overlay */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      font-size: 18px;
+      height: 100%;
+      overflow: hidden;
+    }
     #bait {
       position: fixed;
       inset: 0;
-      background: #000;
-      color: #0f0;
+      background: black;
+      color: lime;
       font-family: monospace;
       display: flex;
       align-items: center;
@@ -19,27 +28,33 @@
       text-align: center;
       padding: 30px;
     }
-    /* Hacker screen */
-    html,body{
-      margin:0;padding:0;height:100%;background:#000;color:#0f0;
-      font-family: monospace;font-size:18px;overflow:hidden;
+    #terminal {
+      white-space: pre-wrap;
+      padding: 20px;
+      line-height: 1.4em;
+      display: none;
     }
-    #terminal{white-space:pre-wrap;line-height:1.4em;padding:20px;}
-    #countdown{color:#f00;font-weight:bold;font-size:20px;padding-left:20px;}
+    #countdown {
+      color: red;
+      font-weight: bold;
+      font-size: 20px;
+      padding-left: 20px;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <!-- CLICK BAIT -->
+  <!-- Fake warning overlay -->
   <div id="bait">
     <div>
       <p>[SECURITY] Suspicious activity detected.<br>
-         ▶️ <strong>Click anywhere to run immediate system scan.</strong></p>
+         ▶️ <strong>Click anywhere to start system security scan...</strong></p>
     </div>
   </div>
 
-  <!-- Hacker output -->
-  <div id="terminal" style="display:none;"></div>
-  <div id="countdown" style="display:none;"></div>
+  <!-- Terminal prank UI -->
+  <div id="terminal"></div>
+  <div id="countdown"></div>
 
   <script>
     const lines = [
@@ -50,25 +65,21 @@
       "[!!!] You have been hacked 😈"
     ];
 
-    function goFull() {
-      const docEl = document.documentElement;
-      (docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen).call(docEl);
-    }
-
     function typeLines() {
-      const term = document.getElementById("terminal");
+      const terminal = document.getElementById("terminal");
       let i = 0;
-      (function loop() {
+      function nextLine() {
         if (i < lines.length) {
-          term.textContent += lines[i++] + "\n";
-          setTimeout(loop, 1500);
+          terminal.textContent += lines[i++] + "\n";
+          setTimeout(nextLine, 1500);
         }
-      })();
+      }
+      nextLine();
     }
 
-    function startCountdown(sec) {
+    function startCountdown(seconds) {
       const el = document.getElementById("countdown");
-      let n = sec;
+      let n = seconds;
       const id = setInterval(() => {
         el.textContent = `System lockdown in ${n} seconds...`;
         if (--n < 0) {
@@ -78,11 +89,17 @@
       }, 1000);
     }
 
-    document.getElementById("bait").addEventListener("click", () => {
-      // try full-screen (user gesture required)
-      goFull();
+    function requestFullscreenFix() {
+      const docEl = document.documentElement;
+      const rfs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+      if (rfs) rfs.call(docEl);
+    }
 
-      // hide bait, show hacker UI
+    document.getElementById("bait").addEventListener("click", () => {
+      // Try to enter fullscreen after click
+      requestFullscreenFix();
+
+      // Hide bait, show prank
       document.getElementById("bait").style.display = "none";
       document.getElementById("terminal").style.display = "block";
       document.getElementById("countdown").style.display = "block";
