@@ -3,22 +3,26 @@
 <head>
   <title>System Breach Detected</title>
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
       background-color: black;
       color: lime;
       font-family: monospace;
       font-size: 18px;
-      padding: 20px;
+      height: 100%;
+      overflow: hidden;
     }
     #terminal {
       white-space: pre-wrap;
+      padding: 20px;
       line-height: 1.4em;
     }
     #countdown {
       color: red;
       font-weight: bold;
       font-size: 20px;
-      margin-top: 20px;
+      padding-left: 20px;
     }
   </style>
   <script>
@@ -54,7 +58,19 @@
       }, 1000);
     }
 
+    function goFullScreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
     window.onload = function () {
+      goFullScreen();
       typeLine();
       startCountdown(60);
     };
