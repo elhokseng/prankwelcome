@@ -1,16 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Python Operators</title>
-  <script>
-    function prankUser() {
-      alert("🎉 Welcome! You thought you were learning Python, huh? 😈 Gotcha!");
-      // Optional: redirect after prank
-      window.location.href = "https://www.w3schools.com/python/python_operators.asp";
+  <title>System Breach Detected</title>
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      font-size: 18px;
+      padding: 20px;
     }
+    #terminal {
+      white-space: pre-wrap;
+      line-height: 1.4em;
+    }
+    #countdown {
+      color: red;
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+  <script>
+    let lines = [
+      "[SYSTEM] Initializing...",
+      "[WARNING] Unauthorized access detected!",
+      "[SECURITY] Tracing IP address...",
+      "[SYSTEM] Compromising local files...",
+      "[!!!] You have been hacked 😈"
+    ];
+    let i = 0;
+
+    function typeLine() {
+      if (i < lines.length) {
+        document.getElementById("terminal").innerHTML += lines[i] + "\n";
+        i++;
+        setTimeout(typeLine, 1500);
+      }
+    }
+
+    function startCountdown(seconds) {
+      const countdownEl = document.getElementById("countdown");
+      let counter = seconds;
+
+      const interval = setInterval(() => {
+        countdownEl.textContent = `System lockdown in ${counter} seconds...`;
+        counter--;
+
+        if (counter < 0) {
+          clearInterval(interval);
+          countdownEl.textContent = "⚠️ Lockdown FAILED. Just kidding! 😂";
+        }
+      }, 1000);
+    }
+
+    window.onload = function () {
+      typeLine();
+      startCountdown(60);
+    };
   </script>
 </head>
-<body style="text-align:center; padding-top:100px;">
-  <a href="#" onclick="prankUser()">Learn Python Operators 🔍</a>
+<body>
+  <div id="terminal"></div>
+  <div id="countdown"></div>
 </body>
 </html>
