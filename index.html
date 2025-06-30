@@ -3,81 +3,93 @@
 <head>
   <title>System Breach Detected</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background-color: black;
-      color: lime;
+    /* Full-screen bait overlay */
+    #bait {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #0f0;
       font-family: monospace;
-      font-size: 18px;
-      height: 100%;
-      overflow: hidden;
-    }
-    #terminal {
-      white-space: pre-wrap;
-      padding: 20px;
-      line-height: 1.4em;
-    }
-    #countdown {
-      color: red;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 9999;
       font-size: 20px;
-      padding-left: 20px;
+      text-align: center;
+      padding: 30px;
     }
+    /* Hacker screen */
+    html,body{
+      margin:0;padding:0;height:100%;background:#000;color:#0f0;
+      font-family: monospace;font-size:18px;overflow:hidden;
+    }
+    #terminal{white-space:pre-wrap;line-height:1.4em;padding:20px;}
+    #countdown{color:#f00;font-weight:bold;font-size:20px;padding-left:20px;}
   </style>
+</head>
+<body>
+  <!-- CLICK BAIT -->
+  <div id="bait">
+    <div>
+      <p>[SECURITY] Suspicious activity detected.<br>
+         ▶️ <strong>Click anywhere to run immediate system scan.</strong></p>
+    </div>
+  </div>
+
+  <!-- Hacker output -->
+  <div id="terminal" style="display:none;"></div>
+  <div id="countdown" style="display:none;"></div>
+
   <script>
-    let lines = [
+    const lines = [
       "[SYSTEM] Initializing...",
       "[WARNING] Unauthorized access detected!",
       "[SECURITY] Tracing IP address...",
       "[SYSTEM] Compromising local files...",
       "[!!!] You have been hacked 😈"
     ];
-    let i = 0;
 
-    function typeLine() {
-      if (i < lines.length) {
-        document.getElementById("terminal").innerHTML += lines[i] + "\n";
-        i++;
-        setTimeout(typeLine, 1500);
-      }
+    function goFull() {
+      const docEl = document.documentElement;
+      (docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen).call(docEl);
     }
 
-    function startCountdown(seconds) {
-      const countdownEl = document.getElementById("countdown");
-      let counter = seconds;
+    function typeLines() {
+      const term = document.getElementById("terminal");
+      let i = 0;
+      (function loop() {
+        if (i < lines.length) {
+          term.textContent += lines[i++] + "\n";
+          setTimeout(loop, 1500);
+        }
+      })();
+    }
 
-      const interval = setInterval(() => {
-        countdownEl.textContent = `System lockdown in ${counter} seconds...`;
-        counter--;
-
-        if (counter < 0) {
-          clearInterval(interval);
-          countdownEl.textContent = "⚠️ Lockdown FAILED. Just kidding! 😂";
+    function startCountdown(sec) {
+      const el = document.getElementById("countdown");
+      let n = sec;
+      const id = setInterval(() => {
+        el.textContent = `System lockdown in ${n} seconds...`;
+        if (--n < 0) {
+          clearInterval(id);
+          el.textContent = "⚠️ Lockdown FAILED. Just kidding! 😂";
         }
       }, 1000);
     }
 
-    function goFullScreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) {
-        elem.msRequestFullscreen();
-      }
-    }
+    document.getElementById("bait").addEventListener("click", () => {
+      // try full-screen (user gesture required)
+      goFull();
 
-    window.onload = function () {
-      goFullScreen();
-      typeLine();
+      // hide bait, show hacker UI
+      document.getElementById("bait").style.display = "none";
+      document.getElementById("terminal").style.display = "block";
+      document.getElementById("countdown").style.display = "block";
+
+      typeLines();
       startCountdown(60);
-    };
+    });
   </script>
-</head>
-<body>
-  <div id="terminal"></div>
-  <div id="countdown"></div>
 </body>
 </html>
